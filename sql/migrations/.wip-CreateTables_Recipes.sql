@@ -67,7 +67,8 @@ create table recipes(
 
 create table allergens(
   id uuid primary key unique default uuid_generate_v4() not null,
-  allergen text not null
+  allergen text not null,
+  description text not null
 );
 
 create table ingredients(
@@ -107,12 +108,17 @@ create table meals(
   id uuid primary key unique default uuid_generate_v4() not null,
   seller_id uuid references sellers(id) not null,
   recipie_id uuid references recipes(id) not null,
-  quantity integer not null,
-  pick_up_start_time timestamp not null,
-  pick_up_end_time timestamp not null,
+  price decimal not null,
+  portions integer not null,
+  portions_claimed integer not null,
+  available_from timestamp not null,
+  available_until timestamp not null,
   is_active boolean not null,
   lat_long point not null,
-  comments text
+  vegan_upon_request boolean not null,
+  vegetarian_upon_request boolean not null,
+  comments text,
+  date_created timestamp not null
 );
 
 create table order(
@@ -125,11 +131,11 @@ create table order(
 );
 
 create table reviews(
-  id uuid unique default uuid_generate_v4() not null,
-  buyer_id uuid references buyers(id) not null,
-  seller_id uuid references sellers(id) not null,
+  id uuid primary key unique default uuid_generate_v4() not null,
+  user_id uuid references users(id) not null,
   meal_id uuid references meals(id) not null,
-  time_created timestamp not null,
+  date_created timestamp not null,
+  date_updated timestamp not null,
   review text,
   rating integer
 );
