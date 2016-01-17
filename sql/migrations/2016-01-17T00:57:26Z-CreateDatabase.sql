@@ -38,13 +38,13 @@ create table oauth_claims (
 
 create table sellers (
   id uuid unique default uuid_generate_v4() not null,
-  user_id uuid unique references users(id) not null on delete restrict,
+  user_id uuid unique references users not null on delete restrict,
   primary key (id, user_id)
 );
 
 create table buyers (
   id uuid unique default uuid_generate_v4() not null,
-  user_id uuid unique references users(id) not null on delete restrict,
+  user_id uuid unique references users not null on delete restrict,
   primary key (id, user_id)
 );
 
