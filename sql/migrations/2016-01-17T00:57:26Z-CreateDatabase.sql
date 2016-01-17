@@ -15,7 +15,7 @@ create table user_address(
   postal_code text not null
 );
 
-create table user_address_type (
+create table user_address_mqpings (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users not null,
   address_id uuid references user_address not null,
@@ -23,27 +23,27 @@ create table user_address_type (
 );
 
 create table oauth_providers (
-  id uuid default uuid_generate_v4(),
+  id uuid unique default uuid_generate_v4() not null,
   provider text unique not null,
   primary key (id, provider)
 );
 
 create table oauth_claims (
-  id uuid default uuid_generate_v4(),
-  provider_uid text not null,
-  provider_id uuid references oauth_providers(id),
-  user_id uuid references users(id),
-  primary key (id, provider_uid, provider_id) 
+  id uuid unique default uuid_generate_v4() not null,
+  provider_uid text,
+  provider_id uuid references oauth_providers(id) not null,
+  user_id uuid references users(id) not null,
+  primary key (id, provider_uid)
 );
 
 create table sellers (
-  id uuid default uuid_generate_v4(),
-  user_id uuid references(id) on delete restrict,
+  id uuid unique default uuid_generate_v4(),
+  user_id uuid references users(id) on delete restrict,
   primary key (id, user_id)
 );
 
 create table buyers (
-  id uuid default uuid_generate_v4(),
+  id uuid unique default uuid_generate_v4(),
   user_id uuid references users(id) on delete restrict,
   primary key (id, user_id)
 );
