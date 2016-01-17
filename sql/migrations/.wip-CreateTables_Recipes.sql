@@ -9,6 +9,7 @@ create table users (
   email text not null unique,
   created_at timestamp not null,
   updated_at timestamp not null,
+  is_active boolean not null
 );
 
 create table user_address(
@@ -107,6 +108,10 @@ create table meals(
   seller_id uuid references sellers(id) not null,
   recipie_id uuid references recipes(id) not null,
   quantity integer not null,
+  pick_up_start_time timestamp not null,
+  pick_up_end_time timestamp not null,
+  is_active boolean not null,
+  lat_long point not null,
   comments text
 );
 
@@ -126,11 +131,12 @@ create table reviews(
   meal_id uuid references meals(id) not null,
   time_created timestamp not null,
   review text,
-  rating decimal
+  rating integer
 );
 
- create table review_images(
+create table review_images(
   review_id uuid references review(id),
   image_url text
   primary key (review_id, image_url)
   );
+
