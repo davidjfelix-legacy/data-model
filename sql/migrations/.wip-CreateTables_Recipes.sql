@@ -1,7 +1,14 @@
 create extension if not exists "uuid-ossp";
 
 create table users (
-  id uuid primary key default uuid_generate_v4()
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  profile_img_url text,
+  followers_url text,
+  phone_number text not null,
+  email text not null unique,
+  created_at timestamp not null,
+  updated_at timestamp not null,
 );
 
 create table user_address(
@@ -15,7 +22,7 @@ create table user_address(
   postal_code text not null
 );
 
-create table user_address_mqpings (
+create table user_address_mappings (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users not null,
   address_id uuid references user_address not null,
@@ -39,12 +46,14 @@ create table oauth_claims (
 create table sellers (
   id uuid unique default uuid_generate_v4(),
   user_id uuid references users(id) on delete restrict,
+  rating decimal,
   primary key (id, user_id)
 );
 
 create table buyers (
   id uuid unique default uuid_generate_v4(),
   user_id uuid references users(id) on delete restrict,
+  foodie_rating decimal,
   primary key (id, user_id)
 );
 
@@ -99,7 +108,7 @@ create table meals(
   recipie_id uuid references recipes(id) not null,
   quantity integer not null,
   comments text
-)
+);
 
 create table order(
   id uuid unique default uuid_generate_v4() not null,
@@ -108,4 +117,20 @@ create table order(
   recipe_id references recipes(id) not null,
   primary key(id, buyer_id, seller_id, recipe_id),
   quantity integer not null
-)
+);
+
+create table reviews(
+  id uuid unique default uuid_generate_v4() not null,
+  buyer_id uuid references buyers(id) not null,
+  seller_id uuid references sellers(id) not null,
+  meal_id uuid references meals(id) not null,
+  time_created timestamp not null,
+  review text,
+  rating decimal
+);
+
+ create table review_images(
+  review_id uuid references review(id),
+  image_url text
+  primary key (review_id, image_url)
+  );
